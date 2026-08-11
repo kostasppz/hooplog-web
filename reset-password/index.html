@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070b12" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Reset password | HoopLog</title>
+  <style>
+    :root {
+      --bg:#070b12;
+      --panel:rgba(255,255,255,.065);
+      --line:rgba(255,255,255,.11);
+      --text:#f9fafb;
+      --muted:#9ca3af;
+      --muted2:#6b7280;
+      --orange:#f97316;
+      --orange2:#fb923c;
+      --green:#22c55e;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(249,115,22,.17), transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(249,115,22,.08), transparent 24%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    .card {
+      width:min(500px,100%);
+      padding:40px 34px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:var(--panel);
+      backdrop-filter:blur(18px);
+      box-shadow:0 28px 90px rgba(0,0,0,.42);
+    }
+
+    .brand {
+      text-align:center;
+      font-weight:850;
+      font-size:22px;
+      letter-spacing:-.4px;
+      margin-bottom:26px;
+    }
+
+    .brand span { color:var(--orange); }
+
+    .icon {
+      width:86px;
+      height:86px;
+      margin:0 auto 22px;
+      display:grid;
+      place-items:center;
+      border-radius:24px;
+      background:linear-gradient(135deg,rgba(251,146,60,.22),rgba(249,115,22,.09));
+      border:1px solid rgba(249,115,22,.28);
+      box-shadow:0 18px 42px rgba(249,115,22,.13);
+    }
+
+    .icon svg { width:42px; height:42px; stroke:var(--orange2); }
+
+    h1 {
+      margin:0 0 10px;
+      text-align:center;
+      font-size:33px;
+      letter-spacing:-1px;
+    }
+
+    .lead {
+      margin:0 auto 28px;
+      max-width:390px;
+      text-align:center;
+      color:var(--muted);
+      font-size:15.5px;
+      line-height:1.65;
+    }
+
+    .status {
+      margin:0 0 24px;
+      padding:12px 14px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(249,115,22,.22);
+      border-radius:14px;
+      background:rgba(249,115,22,.07);
+      color:#fed7aa;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .spinner {
+      flex:0 0 17px;
+      width:17px;
+      height:17px;
+      margin-top:1px;
+      border:2px solid rgba(255,255,255,.2);
+      border-top-color:var(--orange2);
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .field { margin-top:16px; }
+
+    label {
+      display:block;
+      margin:0 0 8px;
+      color:#e5e7eb;
+      font-size:13px;
+      font-weight:750;
+    }
+
+    .input-wrap { position:relative; }
+
+    input {
+      width:100%;
+      height:52px;
+      padding:0 48px 0 15px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:14px;
+      outline:none;
+      background:rgba(3,7,18,.56);
+      color:var(--text);
+      font:inherit;
+      transition:border-color .18s ease,box-shadow .18s ease;
+    }
+
+    input:focus {
+      border-color:rgba(249,115,22,.65);
+      box-shadow:0 0 0 4px rgba(249,115,22,.11);
+    }
+
+    input::placeholder { color:#4b5563; }
+
+    .toggle {
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      width:36px;
+      height:36px;
+      border:0;
+      border-radius:9px;
+      background:transparent;
+      color:#9ca3af;
+      cursor:pointer;
+      font-size:16px;
+    }
+
+    .toggle:hover { background:rgba(255,255,255,.06); color:white; }
+
+    .requirements {
+      margin-top:9px;
+      color:var(--muted2);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .strength {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:5px;
+      margin-top:10px;
+    }
+
+    .strength span {
+      height:4px;
+      border-radius:999px;
+      background:rgba(255,255,255,.09);
+      transition:background .2s ease;
+    }
+
+    .strength[data-score="1"] span:nth-child(1) { background:var(--red); }
+    .strength[data-score="2"] span:nth-child(-n+2) { background:var(--yellow); }
+    .strength[data-score="3"] span:nth-child(-n+3) { background:#84cc16; }
+    .strength[data-score="4"] span:nth-child(-n+4) { background:var(--green); }
+
+    .message {
+      display:none;
+      margin-top:16px;
+      padding:11px 13px;
+      border-radius:12px;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .message.error {
+      display:block;
+      color:#fecaca;
+      background:rgba(239,68,68,.09);
+      border:1px solid rgba(239,68,68,.24);
+    }
+
+    .button {
+      width:100%;
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      margin-top:22px;
+      padding:14px 20px;
+      border:0;
+      border-radius:15px;
+      color:white;
+      font:inherit;
+      font-weight:800;
+      cursor:pointer;
+      background:linear-gradient(135deg,var(--orange2),var(--orange));
+      box-shadow:0 14px 34px rgba(249,115,22,.23);
+      transition:transform .18s ease,opacity .18s ease;
+    }
+
+    .button:hover:not(:disabled) { transform:translateY(-1px); }
+    .button:disabled { cursor:not-allowed; opacity:.45; box-shadow:none; }
+
+    .divider { height:1px; background:var(--line); margin:26px 0 18px; }
+
+    .hint {
+      margin:0;
+      text-align:center;
+      color:var(--muted2);
+      font-size:12.5px;
+      line-height:1.55;
+    }
+
+    .hidden { display:none !important; }
+
+    .result { text-align:center; }
+
+    .result-badge {
+      width:72px;
+      height:72px;
+      margin:0 auto 20px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      font-size:34px;
+      font-weight:900;
+    }
+
+    .result-badge.success {
+      background:rgba(34,197,94,.12);
+      border:1px solid rgba(34,197,94,.28);
+      color:#86efac;
+    }
+
+    .result-badge.failure {
+      background:rgba(239,68,68,.1);
+      border:1px solid rgba(239,68,68,.25);
+      color:#fca5a5;
+    }
+
+    .link-button {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:24px;
+      padding:15px 20px;
+      border-radius:14px;
+      color:white;
+      text-decoration:none;
+      font-weight:800;
+      background:linear-gradient(135deg,var(--orange2),var(--orange));
+    }
+
+    @media (max-width:520px) {
+      body { padding:16px; }
+      .card { padding:34px 22px; border-radius:24px; }
+      h1 { font-size:29px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">Hoop<span>Log</span></div>
+
+    <section id="reset-view">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15.5 7.5a4 4 0 1 0-7.7 1.5L3 13.8V17h3v2h3v2h3l3.7-3.7" />
+          <circle cx="11.5" cy="7.5" r=".5" fill="currentColor" stroke="none" />
+        </svg>
+      </div>
+
+      <h1>Create a new password</h1>
+      <p class="lead">Choose a new password for your HoopLog account. This reset link can only be used once.</p>
+
+      <div id="verification-status" class="status">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Checking your secure reset link…</span>
+      </div>
+
+      <form id="reset-form" class="hidden" novalidate>
+        <div class="field">
+          <label for="password">New password</label>
+          <div class="input-wrap">
+            <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" placeholder="Enter a new password" required />
+            <button class="toggle" type="button" data-target="password" aria-label="Show password">◉</button>
+          </div>
+          <div id="strength" class="strength" data-score="0" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="requirements">Use at least 6 characters. A longer password with mixed characters is stronger.</div>
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Confirm new password</label>
+          <div class="input-wrap">
+            <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" minlength="6" placeholder="Enter it again" required />
+            <button class="toggle" type="button" data-target="confirm-password" aria-label="Show password">◉</button>
+          </div>
+        </div>
+
+        <div id="form-message" class="message" role="alert"></div>
+
+        <button id="submit-button" class="button" type="submit">
+          <span id="button-text">Update password</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </section>
+
+    <section id="success-view" class="result hidden">
+      <div class="result-badge success" aria-hidden="true">✓</div>
+      <h1>Password updated!</h1>
+      <p class="lead">Your HoopLog password has been changed successfully. You can now return to the app and sign in with your new password.</p>
+      <a class="link-button" href="hooplog://home">Open HoopLog&nbsp;&nbsp;→</a>
+    </section>
+
+    <section id="error-view" class="result hidden">
+      <div class="result-badge failure" aria-hidden="true">!</div>
+      <h1>Reset link unavailable</h1>
+      <p id="error-text" class="lead">This password reset link is invalid or has expired. Please request a new password reset from the HoopLog app.</p>
+      <a class="link-button" href="hooplog://home">Return to HoopLog&nbsp;&nbsp;→</a>
+    </section>
+
+    <div class="divider"></div>
+    <p class="hint">For your security, HoopLog never asks you to send your password by email.</p>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0/+esm';
+
+    const SUPABASE_URL = 'https://fdawzafrvzafnyvhvhup.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ivIG-y5Aa4rGUGEBl4xwxw_yV8v7paQ';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
+
+    const resetView = document.getElementById('reset-view');
+    const successView = document.getElementById('success-view');
+    const errorView = document.getElementById('error-view');
+    const errorText = document.getElementById('error-text');
+    const verificationStatus = document.getElementById('verification-status');
+    const form = document.getElementById('reset-form');
+    const formMessage = document.getElementById('form-message');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
+    const submitButton = document.getElementById('submit-button');
+    const buttonText = document.getElementById('button-text');
+    const strength = document.getElementById('strength');
+
+    function showFatalError(message) {
+      resetView.classList.add('hidden');
+      successView.classList.add('hidden');
+      errorView.classList.remove('hidden');
+      errorText.textContent = message;
+    }
+
+    function showFormError(message) {
+      formMessage.textContent = message;
+      formMessage.className = 'message error';
+    }
+
+    function clearFormError() {
+      formMessage.textContent = '';
+      formMessage.className = 'message';
+    }
+
+    function passwordScore(value) {
+      if (!value) return 0;
+      let score = 0;
+      if (value.length >= 6) score++;
+      if (value.length >= 10) score++;
+      if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score++;
+      if (/\d/.test(value) || /[^A-Za-z0-9]/.test(value)) score++;
+      return Math.min(score, 4);
+    }
+
+    password.addEventListener('input', () => {
+      strength.dataset.score = String(passwordScore(password.value));
+      clearFormError();
+    });
+
+    confirmPassword.addEventListener('input', clearFormError);
+
+    document.querySelectorAll('.toggle').forEach((button) => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.target);
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        button.textContent = show ? '◎' : '◉';
+        button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
+    });
+
+    async function verifyRecoveryLink() {
+      const params = new URLSearchParams(window.location.search);
+      const tokenHash = params.get('token_hash');
+      const type = params.get('type') || 'recovery';
+
+      if (!tokenHash || type !== 'recovery') {
+        showFatalError('This password reset link is incomplete. Please request a new password reset from the HoopLog app.');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: 'recovery',
+        });
+
+        if (error || !data?.session) {
+          showFatalError('This password reset link is invalid, expired, or has already been used. Please request a new one from HoopLog.');
+          return;
+        }
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+        verificationStatus.classList.add('hidden');
+        form.classList.remove('hidden');
+        password.focus();
+      } catch (_) {
+        showFatalError('We could not verify this reset link. Please check your internet connection and try again.');
+      }
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearFormError();
+
+      const newPassword = password.value;
+      const confirmation = confirmPassword.value;
+
+      if (newPassword.length < 6) {
+        showFormError('Your password must contain at least 6 characters.');
+        return;
+      }
+
+      if (newPassword !== confirmation) {
+        showFormError('The two passwords do not match.');
+        return;
+      }
+
+      submitButton.disabled = true;
+      buttonText.textContent = 'Updating password…';
+
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+        if (error) {
+          showFormError(error.message || 'We could not update your password. Please try again.');
+          submitButton.disabled = false;
+          buttonText.textContent = 'Update password';
+          return;
+        }
+
+        await supabase.auth.signOut().catch(() => {});
+        resetView.classList.add('hidden');
+        errorView.classList.add('hidden');
+        successView.classList.remove('hidden');
+      } catch (_) {
+        showFormError('Something went wrong while updating your password. Please try again.');
+        submitButton.disabled = false;
+        buttonText.textContent = 'Update password';
+      }
+    });
+
+    verifyRecoveryLink();
+  </script>
+</body>
+</html>
