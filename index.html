@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f19" />
+  <title>HoopLog</title>
+  <style>
+    :root {
+      --bg: #070b12;
+      --panel: rgba(255,255,255,.06);
+      --line: rgba(255,255,255,.10);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --orange: #f97316;
+      --orange-2: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(249,115,22,.20), transparent 32%),
+        radial-gradient(circle at 85% 80%, rgba(249,115,22,.10), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .shell {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+    .hero, .card {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.35);
+    }
+    .hero { padding: 56px; position: relative; overflow: hidden; }
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
+    .brand span { color: var(--orange); }
+    .eyebrow { margin-top: 72px; color: var(--orange-2); text-transform: uppercase; letter-spacing: .18em; font-size: 12px; font-weight: 800; }
+    h1 { margin: 14px 0 18px; font-size: clamp(42px, 7vw, 72px); line-height: .98; letter-spacing: -2.5px; }
+    .hero p { max-width: 560px; margin: 0; color: var(--muted); font-size: 18px; line-height: 1.7; }
+    .ball {
+      position: absolute;
+      width: 250px; height: 250px;
+      right: -70px; top: -70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fdba74, #f97316 45%, #c2410c 100%);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.25), 0 25px 70px rgba(249,115,22,.25);
+    }
+    .ball::before, .ball::after {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+    }
+    .ball::before { border-left: 5px solid rgba(43,20,7,.8); transform: rotate(35deg) scale(.74); }
+    .ball::after { border-top: 5px solid rgba(43,20,7,.8); transform: rotate(-20deg) scale(.86); }
+    .card { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+    .check { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 22px; background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.35); font-size: 30px; }
+    .card h2 { margin: 0 0 10px; font-size: 30px; letter-spacing: -.8px; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .btn { margin-top: 28px; display: inline-flex; justify-content: center; align-items: center; text-decoration: none; color: white; font-weight: 800; padding: 15px 20px; border-radius: 14px; background: linear-gradient(135deg, var(--orange-2), var(--orange)); box-shadow: 0 12px 30px rgba(249,115,22,.25); }
+    .small { margin-top: 18px !important; font-size: 13px; }
+    @media (max-width: 760px) {
+      .shell { grid-template-columns: 1fr; }
+      .hero { padding: 38px 30px 44px; }
+      .eyebrow { margin-top: 84px; }
+      .card { padding: 32px 28px; }
+      .ball { width: 190px; height: 190px; right: -60px; top: -58px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="ball" aria-hidden="true"></div>
+      <div class="brand">Hoop<span>Log</span></div>
+      <div class="eyebrow">Basketball, remembered</div>
+      <h1>Track every game.<br>Keep every memory.</h1>
+      <p>HoopLog is your personal basketball journal for games, arenas and unforgettable moments on and off the court.</p>
+    </section>
+
+    <section class="card">
+      <div class="check">✓</div>
+      <h2>Email confirmed</h2>
+      <p>Your HoopLog account is ready. Return to the mobile app and sign in to continue.</p>
+      <a class="btn" href="hooplog://home">Open HoopLog →</a>
+      <p class="small">If the app does not open automatically, switch back to HoopLog on your phone.</p>
+    </section>
+  </main>
+</body>
+</html>
